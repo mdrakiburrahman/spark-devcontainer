@@ -1,6 +1,6 @@
 # Contributing
 
-## How to use, on a Linux machine
+## How to use, on a Windows machine by installing WSL
 
 1. Windows pre-reqs
 
@@ -9,6 +9,8 @@
    ```
 
 1. Get a fresh new WSL machine up:
+
+   > ⚠️ Warning: this removes Docker Desktop if you have it installed
 
    ```powershell
    $GIT_ROOT = git rev-parse --show-toplevel
@@ -27,6 +29,7 @@
    cd spark-devcontainer/
    code .
    ```
+
 1. Run the bootstrapper script, that installs all tools idempotently:
 
    ```bash

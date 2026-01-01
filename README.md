@@ -20,7 +20,8 @@ This repository contains the automation necessary to build and push an Apache Sp
 
 ## Quickstart
 
-1. Follow [CONTRIBUTING](contrib/README.md) to get a windows devbox ready to build the devcontainer
+1. Follow [CONTRIBUTING](contrib/README.md) to get a windows machine ready to build the devcontainer.
+
 2. Run:
 
    ```bash
