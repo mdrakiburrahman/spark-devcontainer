@@ -1,0 +1,103 @@
+{
+  "name": "Dev",
+  "build": {
+    "dockerfile": "Dockerfile.local"
+  },
+  "runArgs": [
+    // Access docker from host machine inside the container
+    "--add-host=host.docker.internal:host-gateway"
+  ],
+  // Features to add into the container following the new proposed specification
+  // https://github.com/devcontainers/features
+  "features": {
+    "ghcr.io/devcontainers/features/azure-cli:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/common-utils:2.4.3": {
+      "username": "automatic",
+      "uid": "automatic",
+      "gid": "automatic",
+      "installZsh": true,
+      "installOhMyZsh": true,
+      "upgradePackages": true,
+      "nonFreePackages": false
+    },
+    "ghcr.io/devcontainers/features/docker-from-docker:1": {
+      "version": "5:20.10*",
+      "moby": false
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "os-provided",
+      "ppa": false
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts",
+      "nodeGypDependencies": true
+    }
+  },
+  // Various mounting, run, post-create, and user settings
+  "containerEnv": {
+    "SSH_AUTH_SOCK": "{localEnv:SSH_AUTH_SOCK}",
+    // Useful for doing bind mounts for containers launched from inside the devcontainer.
+    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
+    "CONTAINER_WORKSPACE_FOLDER": "${containerWorkspaceFolder}"
+  },
+  "postCreateCommand": "/tmp/overlay/post-create-commands.sh",
+  "postAttachCommand": "/tmp/overlay/post-attach-commands.sh",
+  // Set *default* container specific settings.json values on container create.
+  // See Also: https://containers.dev/supporting
+  "customizations": {
+    "vscode": {
+      "settings": {
+        // Editor
+        "editor.formatOnType": true,
+        "editor.formatOnSave": true,
+        // Terminal
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash"
+          },
+          "zsh": {
+            "path": "zsh"
+          },
+          "fish": {
+            "path": "fish"
+          },
+          "tmux": {
+            "path": "tmux",
+            "icon": "terminal-tmux"
+          },
+          "pwsh": {
+            "path": "pwsh",
+            "icon": "terminal-powershell"
+          }
+        },
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.inheritEnv": true,
+        // VS Code team has a regression that regresses extensions in devcontainer, this is a workaround
+        // until they fix this bug: https://github.com/microsoft/vscode/issues/175705#issuecomment-1987083692
+        //
+        "extensions.verifySignature": false
+      },
+      "extensions": [
+        "donjayamanne.githistory", // Enhanced git history experience
+        "eamodio.gitlens", // Enhanced git experience
+        "EditorConfig.EditorConfig", // Support for .editorconfig files
+        "esbenp.prettier-vscode", // A pretty good formatter for many languages
+        "foxundermoon.shell-format", // Shell script formatter
+        "github.copilot-chat", // Copilot chat integration
+        "github.copilot", // Copilot integration
+        "Gruntfuggly.todo-tree", // Highlights TODO comments in code
+        "huntertran.auto-markdown-toc", // Auto-generated Markdown Table of Contents
+        "ms-azuretools.vscode-docker", // Docker integration
+        "nrwl.angular-console", // Nx console plugin
+        "oderwat.indent-rainbow", // Color indented code to make it easier to read
+        "shd101wyy.markdown-preview-enhanced", // Enhanced markdown previewer
+        "stkb.rewrap", // "Alt + Q" -> rewrap comments after n characters on one line
+        "streetsidesoftware.code-spell-checker", // Spell checks your code
+        "tyriar.sort-lines", // "Ctrl + Shift + P -> Sort lines" -> sort lines alphabetically
+        "waderyan.gitblame" // Enhances git blame experience
+      ]
+    }
+  }
+}
