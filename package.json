@@ -1,0 +1,7 @@
+{
+  "name": "spark-devcontainer",
+  "devDependencies": {
+    "@devcontainers/cli": "^0.80.3"
+  },
+  "type": "module"
+}
