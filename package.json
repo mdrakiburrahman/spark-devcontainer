@@ -1,7 +1,8 @@
 {
   "name": "spark-devcontainer",
   "devDependencies": {
-    "@devcontainers/cli": "^0.80.3"
+    "@devcontainers/cli": "^0.80.3",
+    "nx": "20.6.0"
   },
   "type": "module"
 }

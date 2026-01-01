@@ -56,4 +56,5 @@ sudo npm install
 
 echo "Docker: $(docker --version)"
 echo "npm: $(npm version)"
+echo "nx: $(npx nx --version)"
 echo "devcontainer: $(npx devcontainer --version)"
