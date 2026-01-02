@@ -10,7 +10,7 @@
     <a href="https://code.visualstudio.com/docs/devcontainers/containers">Devcontainer Overview</a>
     ·
     <a href="https://blog.fabric.microsoft.com/en-us/blog/sql-telemetry-intelligence-how-we-built-a-petabyte-scale-data-platform-with-fabric?ft=01-2024:date">Spark Devcontainer benefits</a>
-    .
+    ·
   </p>
 </p>
 
