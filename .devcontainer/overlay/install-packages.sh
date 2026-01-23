@@ -69,6 +69,9 @@ livy.server.session.timeout = 1h
 livy.repl.enable-hive-context = false
 EOF
 
+mkdir -p /opt/livy/logs
+chmod 777 /opt/livy/logs
+
 sudo apt-get autoremove -y &&
     sudo apt-get clean -y &&
     sudo rm -rf /var/lib/apt/lists/* &&
