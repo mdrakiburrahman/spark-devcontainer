@@ -46,6 +46,32 @@ wget https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VER
     rm -rf spark-$SPARK_VERSION-bin-hadoop3.tgz &&
     rm -rf spark-$SPARK_VERSION-bin-hadoop3
 
+LIVY_VERSION='0.9.0-incubating'
+LIVY_VERSION_RC='rc2'
+SCALA_VERSION='2.12'
+LIVY_DOWNLOAD_URL="https://dist.apache.org/repos/dist/dev/incubator/livy/${LIVY_VERSION}-${LIVY_VERSION_RC}"
+
+echo "Installing Apache Livy '$LIVY_VERSION' (Scala $SCALA_VERSION)"
+cd /tmp
+wget "${LIVY_DOWNLOAD_URL}/apache-livy-${LIVY_VERSION}_${SCALA_VERSION}-bin.zip"
+unzip apache-livy-${LIVY_VERSION}_${SCALA_VERSION}-bin.zip
+mkdir -p /opt/livy
+mv apache-livy-${LIVY_VERSION}_${SCALA_VERSION}-bin/* /opt/livy
+rm -rf apache-livy-${LIVY_VERSION}_${SCALA_VERSION}-bin.zip
+rm -rf apache-livy-${LIVY_VERSION}_${SCALA_VERSION}-bin
+
+cat > /opt/livy/conf/livy.conf << 'EOF'
+# Livy configuration for local dev container with Spark 3.x
+livy.spark.master = local[*]
+livy.spark.deploy-mode = client
+livy.file.local-dir-whitelist = /
+livy.server.session.timeout = 1h
+livy.repl.enable-hive-context = false
+EOF
+
+mkdir -p /opt/livy/logs
+chmod 777 /opt/livy/logs
+
 sudo apt-get autoremove -y &&
     sudo apt-get clean -y &&
     sudo rm -rf /var/lib/apt/lists/* &&

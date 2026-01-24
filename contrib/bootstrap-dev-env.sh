@@ -53,6 +53,7 @@ fi
 
 cd "$REPO_ROOT"
 sudo npm install
+sudo chmod -R 777 ${REPO_ROOT}/node_modules
 
 echo "Docker: $(docker --version)"
 echo "npm: $(npm version)"
