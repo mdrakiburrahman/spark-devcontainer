@@ -81,7 +81,7 @@ function pushDockerImage(imageName: string, imageTag: string) {
  */
 function updateDevcontainerConfigFile(imageName: string, imageTag: string, filename: string) {
     const data = {
-        "name": "MonitoringDevcontainer",
+        "name": "devcontainer",
         "image": `${imageName}:${imageTag}`,
         "remoteUser": "vscode",
         "containerUser": "vscode"
