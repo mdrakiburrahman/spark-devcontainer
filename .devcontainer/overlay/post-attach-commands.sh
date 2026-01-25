@@ -1,9 +1,41 @@
 #!/bin/bash -e
 
-echo "Starting Apache Spark..."
-
 export SPARK_HOME=/opt/spark
 export LIVY_HOME=/opt/livy
+
+GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo "")
+USER_SPARK_DEFAULTS="${GIT_ROOT}/spark-defaults.conf"
+SPARK_DEFAULTS="/opt/spark/conf/spark-defaults.conf"
+
+# Function to append lines that don't already exist in destination
+append_if_missing() {
+    local src="$1"
+    local dest="$2"
+    while IFS= read -r line || [ -n "$line" ]; do
+        if [ -n "$line" ] && ! grep -qxF "$line" "$dest" 2>/dev/null; then
+            echo "$line" >> "$dest"
+        fi
+    done < "$src"
+}
+
+if [ -n "$GIT_ROOT" ] && [ -f "$USER_SPARK_DEFAULTS" ]; then
+    echo "Found user spark-defaults.conf at $USER_SPARK_DEFAULTS"
+    append_if_missing "$USER_SPARK_DEFAULTS" "$SPARK_DEFAULTS"
+else
+    echo "Applying default spark-defaults.conf"
+    TEMP_DEFAULTS=$(mktemp)
+    cat > "$TEMP_DEFAULTS" << 'EOF'
+spark.databricks.delta.schema.autoMerge.enabled=true
+spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog
+spark.sql.catalogImplementation=hive
+spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension
+spark.sql.sources.default=delta
+EOF
+    append_if_missing "$TEMP_DEFAULTS" "$SPARK_DEFAULTS"
+    rm -f "$TEMP_DEFAULTS"
+fi
+
+echo "Starting Apache Spark..."
 
 if pgrep -f "org.apache.spark.deploy.master.Master" >/dev/null; then
     echo "Spark Master already running"

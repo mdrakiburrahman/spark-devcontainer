@@ -57,14 +57,6 @@ DELTA_STORAGE_JAR="delta-storage-${DELTA_VERSION}.jar"
 wget -P /opt/spark/jars "https://repo1.maven.org/maven2/io/delta/delta-spark_${SCALA_VERSION}/${DELTA_VERSION}/${DELTA_CORE_JAR}"
 wget -P /opt/spark/jars "https://repo1.maven.org/maven2/io/delta/delta-storage/${DELTA_VERSION}/${DELTA_STORAGE_JAR}"
 
-cat > /opt/spark/conf/spark-defaults.conf << 'EOF'
-spark.databricks.delta.schema.autoMerge.enabled=true
-spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog
-spark.sql.catalogImplementation=hive
-spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension
-spark.sql.sources.default=delta
-EOF
-
 LIVY_VERSION='0.9.0-incubating'
 LIVY_VERSION_RC='rc2'
 SCALA_VERSION='2.12'
