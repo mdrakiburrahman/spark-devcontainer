@@ -77,7 +77,7 @@ livy.spark.master = local[*]
 livy.spark.deploy-mode = client
 livy.file.local-dir-whitelist = /
 livy.server.session.timeout = 1h
-livy.repl.enable-hive-context = false
+livy.repl.enable-hive-context = true
 livy.server.spark-home = /opt/spark
 EOF
 
