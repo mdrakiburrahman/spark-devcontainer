@@ -38,6 +38,9 @@ apt-get install -y \
 # - https://learn.microsoft.com/en-us/azure/synapse-analytics/spark/apache-spark-version-support#supported-azure-synapse-runtime-releases
 #
 SPARK_VERSION='3.5.1'
+DELTA_VERSION='3.2.0'
+SCALA_VERSION='2.12'
+
 echo "Installing Apache Spark '$SPARK_VERSION' (for local 'spark-submit', identical to Azure Synapse runtime)"
 wget https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop3.tgz &&
     tar -xvf spark-$SPARK_VERSION-bin-hadoop3.tgz &&
@@ -45,6 +48,22 @@ wget https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VER
     mv spark-$SPARK_VERSION-bin-hadoop3/* /opt/spark &&
     rm -rf spark-$SPARK_VERSION-bin-hadoop3.tgz &&
     rm -rf spark-$SPARK_VERSION-bin-hadoop3
+
+echo "Installing Delta Lake '$DELTA_VERSION' for Spark '$SPARK_VERSION'"
+mkdir -p /opt/spark/jars
+DELTA_CORE_JAR="delta-spark_${SCALA_VERSION}-${DELTA_VERSION}.jar"
+DELTA_STORAGE_JAR="delta-storage-${DELTA_VERSION}.jar"
+
+wget -P /opt/spark/jars "https://repo1.maven.org/maven2/io/delta/delta-spark_${SCALA_VERSION}/${DELTA_VERSION}/${DELTA_CORE_JAR}"
+wget -P /opt/spark/jars "https://repo1.maven.org/maven2/io/delta/delta-storage/${DELTA_VERSION}/${DELTA_STORAGE_JAR}"
+
+cat > /opt/spark/conf/spark-defaults.conf << 'EOF'
+spark.databricks.delta.schema.autoMerge.enabled=true
+spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog
+spark.sql.catalogImplementation=hive
+spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension
+spark.sql.sources.default=delta
+EOF
 
 LIVY_VERSION='0.9.0-incubating'
 LIVY_VERSION_RC='rc2'
@@ -67,6 +86,12 @@ livy.spark.deploy-mode = client
 livy.file.local-dir-whitelist = /
 livy.server.session.timeout = 1h
 livy.repl.enable-hive-context = false
+livy.server.spark-home = /opt/spark
+EOF
+
+cat > /opt/livy/conf/livy-env.sh << 'EOF'
+export SPARK_HOME=/opt/spark
+export SPARK_CONF_DIR=/opt/spark/conf
 EOF
 
 mkdir -p /opt/livy/logs
