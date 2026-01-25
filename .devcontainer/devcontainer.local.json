@@ -122,6 +122,7 @@
       // Add the IDs of extensions you want installed when the container is created.
       "extensions": [
         "donjayamanne.githistory", // Enhanced git history experience
+        "dbdiagram.dbdiagram-vscode", // Database diagram designer
         "eamodio.gitlens", // Enhanced git experience
         "EditorConfig.EditorConfig", // Support for .editorconfig files
         "esbenp.prettier-vscode", // A pretty good formatter for many languages
