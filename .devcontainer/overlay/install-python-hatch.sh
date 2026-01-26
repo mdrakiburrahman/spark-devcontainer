@@ -38,3 +38,4 @@ install_hatch() {
 
 # X64
 install_hatch "hatch-x86_64-unknown-linux-gnu.tar.gz"
+curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="${INSTALL_PATH}" sh
