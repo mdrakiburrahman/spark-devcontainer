@@ -11,14 +11,17 @@ rm -f packages-microsoft-prod.deb
 apt-get update
 apt-get install -y \
     apt-transport-https \
+    blobfuse2 \
     ca-certificates \
     cmake \
     cpio \
     curl \
     file \
+    fuse3 \
     gnupg \
     jq \
     libc6 \
+    libfuse3-dev \
     lsb-release \
     msodbcsql18 \
     openjdk-17-jdk \
@@ -88,6 +91,10 @@ EOF
 
 mkdir -p /opt/livy/logs
 chmod 777 /opt/livy/logs
+
+# AI tools
+#
+curl -fsSL https://gh.io/copilot-install | bash
 
 sudo apt-get autoremove -y &&
     sudo apt-get clean -y &&
