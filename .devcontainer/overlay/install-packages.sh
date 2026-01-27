@@ -92,6 +92,10 @@ EOF
 mkdir -p /opt/livy/logs
 chmod 777 /opt/livy/logs
 
+# AI tools
+#
+curl -fsSL https://gh.io/copilot-install | bash
+
 sudo apt-get autoremove -y &&
     sudo apt-get clean -y &&
     sudo rm -rf /var/lib/apt/lists/* &&
