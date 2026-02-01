@@ -84,7 +84,14 @@ function updateDevcontainerConfigFile(imageName: string, imageTag: string, filen
         "name": "devcontainer",
         "image": `${imageName}:${imageTag}`,
         "remoteUser": "vscode",
-        "containerUser": "vscode"
+        "containerUser": "vscode",
+        "runArgs": [
+            "--cap-add=SYS_ADMIN",
+            "--device=/dev/fuse",
+            "--security-opt=apparmor:unconfined",
+            "--add-host=host.docker.internal:host-gateway"
+            ],
+        "mounts": ["type=bind,source=/dev/fuse,target=/dev/fuse"]
     }
 
     writeFileSync(filename, JSON.stringify(data, null, 4));
