@@ -43,7 +43,7 @@ apt-get install -y \
 SPARK_VERSION='3.5.1'
 DELTA_VERSION='3.2.0'
 SCALA_VERSION='2.12'
-POSTGRES_DRIVER_VERSION='42.7.3'
+MSSQL_DRIVER_VERSION='13.2.1.jre11'
 
 echo "Installing Apache Spark '$SPARK_VERSION' (for local 'spark-submit', identical to Azure Synapse runtime)"
 wget https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop3.tgz &&
@@ -58,11 +58,11 @@ mkdir -p /opt/spark/jars
 
 DELTA_CORE_JAR="delta-spark_${SCALA_VERSION}-${DELTA_VERSION}.jar"
 DELTA_STORAGE_JAR="delta-storage-${DELTA_VERSION}.jar"
-POSTGRES_JAR="postgresql-${POSTGRES_DRIVER_VERSION}.jar"
+MSSQL_JAR="mssql-jdbc-${MSSQL_DRIVER_VERSION}.jar"
 
 wget -P /opt/spark/jars "https://repo1.maven.org/maven2/io/delta/delta-spark_${SCALA_VERSION}/${DELTA_VERSION}/${DELTA_CORE_JAR}"
 wget -P /opt/spark/jars "https://repo1.maven.org/maven2/io/delta/delta-storage/${DELTA_VERSION}/${DELTA_STORAGE_JAR}"
-wget -P /opt/spark/jars "https://repo1.maven.org/maven2/org/postgresql/postgresql/${POSTGRES_DRIVER_VERSION}/${POSTGRES_JAR}"
+wget -P /opt/spark/jars "https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/${MSSQL_DRIVER_VERSION}/${MSSQL_JAR}"
 
 LIVY_VERSION='0.9.0-incubating'
 LIVY_VERSION_RC='rc2'
