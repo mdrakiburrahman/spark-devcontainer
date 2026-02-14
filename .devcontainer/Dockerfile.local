@@ -4,6 +4,9 @@ FROM mcr.microsoft.com/vscode/devcontainers/base:focal
 # Copy library scripts to execute
 COPY overlay/*.sh /tmp/overlay/
 
+# Copy default config files
+COPY config/defaults /opt/spark-devcontainer/config/defaults
+
 # Install necessary packages
 RUN /tmp/overlay/install-packages.sh
 RUN /tmp/overlay/install-python-hatch.sh

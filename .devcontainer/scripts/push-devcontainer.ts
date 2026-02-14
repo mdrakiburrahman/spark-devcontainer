@@ -115,3 +115,20 @@ function updatePipelineConfigFile(imageName: string, imageTag: string, filename:
     const yamlContent = yaml.dump(data);
     writeFileSync(filename, yamlContent);
 }
+
+/**
+ * Updates the docker-compose.test.yml file with the new image
+ * @param imageName The name of the image
+ * @param imageTag The tag of the image
+ */
+function updateDockerComposeTestFile(imageName: string, imageTag: string) {
+    const composeFile = '.devcontainer/docker-compose.test.yml';
+    let content = readFileSync(composeFile, 'utf8');
+    
+    content = content.replace(
+        /image: \${DEVCONTAINER_IMAGE}/,
+        `image: ${imageName}:${imageTag}`
+    );
+    
+    writeFileSync(composeFile, content);
+}

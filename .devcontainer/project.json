@@ -40,6 +40,17 @@
       },
       "inputs": ["{workspaceRoot}/.devcontainer/.devcontainer-hash.txt"],
       "dependsOn": ["build"]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "jest --config jest.config.ts --runInBand",
+            "forwardAllArgs": false
+          }
+        ]
+      }
     }
   }
 }
