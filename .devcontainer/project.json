@@ -46,7 +46,7 @@
       "options": {
         "commands": [
           {
-            "command": "bash ./.devcontainer/scripts/test-devcontainer.sh",
+            "command": "jest --config jest.config.ts --runInBand",
             "forwardAllArgs": false
           }
         ]
