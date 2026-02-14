@@ -6,4 +6,6 @@ node_modules/
 
 # Temporary
 .temp/
-logs/*
+logs/**/*
+!logs/test-runs/
+!logs/test-runs/README.md
