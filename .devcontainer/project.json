@@ -40,6 +40,17 @@
       },
       "inputs": ["{workspaceRoot}/.devcontainer/.devcontainer-hash.txt"],
       "dependsOn": ["build"]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "bash ./.devcontainer/scripts/test-devcontainer.sh",
+            "forwardAllArgs": false
+          }
+        ]
+      }
     }
   }
 }

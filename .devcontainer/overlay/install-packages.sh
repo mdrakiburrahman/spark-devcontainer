@@ -3,6 +3,8 @@
 export ACCEPT_EULA=Y
 export DEBIAN_FRONTEND=noninteractive
 export OS_DISTRIBUTION=$(grep VERSION_ID /etc/os-release | cut -d '"' -f 2)
+export SCRIPT_DIR=$(realpath $(dirname $0))
+source "${SCRIPT_DIR}/common.sh"
 
 curl -sSL -O "https://packages.microsoft.com/config/ubuntu/${OS_DISTRIBUTION}/packages-microsoft-prod.deb"
 sudo dpkg -i packages-microsoft-prod.deb >/dev/null
@@ -15,6 +17,7 @@ apt-get install -y \
     ca-certificates \
     cmake \
     cpio \
+    cron \
     curl \
     file \
     fuse3 \
@@ -34,7 +37,13 @@ apt-get install -y \
     unixodbc-dev \
     unzip \
     vim \
-    wget
+    wget \
+    xdg-utils
+
+sudo add-apt-repository ppa:rmescandon/yq -y
+apt-get update
+apt-get install -y yq
+
 
 # Local spark version is dictated by available runtime in Azure Synapse and Fabric:
 #
@@ -65,7 +74,7 @@ wget -P /opt/spark/jars "https://repo1.maven.org/maven2/io/delta/delta-storage/$
 wget -P /opt/spark/jars "https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/${MSSQL_DRIVER_VERSION}/${MSSQL_JAR}"
 
 LIVY_VERSION='0.9.0-incubating'
-LIVY_VERSION_RC='rc2'
+LIVY_VERSION_RC='rc1'
 SCALA_VERSION='2.12'
 LIVY_DOWNLOAD_URL="https://dist.apache.org/repos/dist/dev/incubator/livy/${LIVY_VERSION}-${LIVY_VERSION_RC}"
 
