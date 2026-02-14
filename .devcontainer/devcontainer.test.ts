@@ -31,7 +31,6 @@ describe('Devcontainer Integration Tests', () => {
     containerId = execSync(cmd).toString().trim();
     writeFileSync(join(logDir, 'docker-run.log'), containerId);
     
-    // Wait for container
     for (let i = 0; i < 30; i++) {
       const status = execSync('docker inspect spark-devcontainer-test --format="{{.State.Status}}"', { encoding: 'utf8' }).trim();
       if (status === 'running') break;
@@ -58,6 +57,54 @@ describe('Devcontainer Integration Tests', () => {
     );
     writeFileSync(join(logDir, 'spark-shell.log'), output);
     expect(output).toContain('|  1|');
+  });
+
+  test('Run post-create commands', () => {
+    const output = execSync(
+      'docker exec spark-devcontainer-test bash -c "/tmp/overlay/post-create-commands.sh"',
+      { encoding: 'utf8' }
+    );
+    writeFileSync(join(logDir, 'post-create.log'), output);
+    expect(output).toContain('Hatch');
+  });
+
+  test('Run post-attach commands', () => {
+    const output = execSync(
+      'docker exec spark-devcontainer-test bash -c "/tmp/overlay/post-attach-commands.sh"',
+      { encoding: 'utf8', timeout: 60000 }
+    );
+    writeFileSync(join(logDir, 'post-attach.log'), output);
+    expect(output).toContain('SPARK DEVCONTAINER READY');
+    expect(output).toContain('Livy Server');
+  });
+
+  test('Livy health check', () => {
+    let healthy = false;
+    for (let i = 0; i < 30; i++) {
+      try {
+        const output = execSync(
+          'docker exec spark-devcontainer-test curl -s http://localhost:8998/sessions',
+          { encoding: 'utf8' }
+        );
+        if (output.includes('sessions')) {
+          writeFileSync(join(logDir, 'livy-health.log'), output);
+          healthy = true;
+          break;
+        }
+      } catch (e) { }
+      execSync('sleep 1');
+    }
+    expect(healthy).toBe(true);
+  });
+
+  test('Verify Livy logs exist', () => {
+    const output = execSync(
+      'docker exec spark-devcontainer-test bash -c "ls -la /tmp/livy-logs/ && cat /tmp/livy-logs/livy-server.log"',
+      { encoding: 'utf8' }
+    );
+    writeFileSync(join(logDir, 'livy-logs.log'), output);
+    expect(output).toContain('livy-server.log');
+    expect(output.length).toBeGreaterThan(0);
   });
 });
 
