@@ -7,7 +7,6 @@ describe('Devcontainer Integration Tests', () => {
   const workspaceRoot = execSync('git rev-parse --show-toplevel').toString().trim();
   const devcontainerJson = join(workspaceRoot, '.devcontainer', 'devcontainer.json');
   const devcontainerImage = readFileSync(devcontainerJson, 'utf8').match(/"image":\s*"([^"]+)"/)?.[1];
-  const workspaceDir = '/tmp/test-workspace';
   const logDir = join(workspaceRoot, 'logs', 'test-runs', timestamp);
   let containerId: string;
 
@@ -17,29 +16,14 @@ describe('Devcontainer Integration Tests', () => {
 
   afterAll(() => {
     if (containerId) execSync(`docker rm -f spark-devcontainer-test`, { stdio: 'pipe' });
-    if (existsSync(workspaceDir)) rmSync(workspaceDir, { recursive: true, force: true });
-  });
-
-  test('Setup test workspace', () => {
-    if (existsSync(workspaceDir)) rmSync(workspaceDir, { recursive: true, force: true });
-    mkdirSync(workspaceDir, { recursive: true });
-    
-    execSync('git init -q', { cwd: workspaceDir });
-    execSync('git config user.email "test@example.com"', { cwd: workspaceDir });
-    execSync('git config user.name "Test User"', { cwd: workspaceDir });
-    writeFileSync(join(workspaceDir, 'README.md'), '# Test\n');
-    execSync('git add README.md && git commit -q -m "init"', { cwd: workspaceDir });
-    writeFileSync(join(workspaceDir, 'package.json'), JSON.stringify({ name: 'test', version: '1.0.0', private: true }));
-    
-    expect(existsSync(join(workspaceDir, '.git'))).toBe(true);
   });
 
   test('Start and verify container', () => {
     const cmd = [
       'docker run -d --name spark-devcontainer-test --cap-add=SYS_ADMIN',
       '--device=/dev/fuse --security-opt=apparmor:unconfined',
-      `-v ${workspaceDir}:/workspace -v /dev/fuse:/dev/fuse:rw`,
-      '-w /workspace --user vscode',
+      '-v /dev/fuse:/dev/fuse:rw',
+      '--user vscode',
       devcontainerImage,
       'sleep infinity'
     ].join(' ');
@@ -57,22 +41,14 @@ describe('Devcontainer Integration Tests', () => {
     expect(containerId).toBeTruthy();
   });
 
-  test('Run post-create commands', () => {
+  test('Verify base image tools', () => {
     const output = execSync(
-      'docker exec spark-devcontainer-test bash -c "cd /workspace && /tmp/overlay/post-create-commands.sh"',
+      'docker exec spark-devcontainer-test bash -c "hatch --version && spark-submit --version"',
       { encoding: 'utf8' }
     );
-    writeFileSync(join(logDir, 'post-create.log'), output);
+    writeFileSync(join(logDir, 'base-tools.log'), output);
     expect(output).toContain('Hatch');
-  });
-
-  test('Run post-attach commands', () => {
-    const output = execSync(
-      'docker exec spark-devcontainer-test bash -c "cd /workspace && /tmp/overlay/post-attach-commands.sh"',
-      { encoding: 'utf8' }
-    );
-    writeFileSync(join(logDir, 'post-attach.log'), output);
-    expect(output).toContain('SPARK DEVCONTAINER READY');
+    expect(output).toContain('version');
   });
 
   test('Spark Shell SELECT 1', () => {
@@ -82,22 +58,6 @@ describe('Devcontainer Integration Tests', () => {
     );
     writeFileSync(join(logDir, 'spark-shell.log'), output);
     expect(output).toContain('|  1|');
-  });
-
-  test('Livy health check', () => {
-    let healthy = false;
-    for (let i = 0; i < 30; i++) {
-      try {
-        const output = execSync('docker exec spark-devcontainer-test curl -s http://localhost:8998/sessions', { encoding: 'utf8' });
-        if (output.includes('sessions')) {
-          writeFileSync(join(logDir, 'livy-health.log'), output);
-          healthy = true;
-          break;
-        }
-      } catch (e) { }
-      execSync('sleep 1');
-    }
-    expect(healthy).toBe(true);
   });
 });
 

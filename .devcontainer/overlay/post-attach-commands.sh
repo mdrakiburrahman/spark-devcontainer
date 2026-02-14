@@ -5,13 +5,8 @@ export LIVY_HOME=/opt/livy
 export SCRIPT_DIR=$(realpath $(dirname $0))
 source "${SCRIPT_DIR}/common.sh"
 
-GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo "")
-
-if [ -z "$GIT_ROOT" ]; then
-    echo "ERROR: Not inside a git repository. Cannot locate configuration files."
-    exit 1
-fi
-
+GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo "$(pwd)")
+[ ! -d "$GIT_ROOT/.git" ] && echo "WARNING: Not inside a git repository. Using built-in defaults only."
 export GIT_ROOT
 
 PROCESSED_FILES=()
@@ -19,7 +14,18 @@ CONFIG_SOURCES=()
 USER_CONFIG_MSG=""
 
 DEFAULT_CONFIG_DIR="/opt/spark-devcontainer/config/defaults"
-USER_CONFIG_FILE="${GIT_ROOT}/spark-devcontainer.yaml"
+
+if [ -d "$GIT_ROOT/.git" ]; then
+    USER_CONFIG_FILE="${GIT_ROOT}/spark-devcontainer.yaml"
+else
+    USER_CONFIG_FILE=""
+fi
+
+if [ -d "$GIT_ROOT/.git" ]; then
+    export LIVY_SPARK_LOG_DIR="${GIT_ROOT}/logs/livy"
+else
+    export LIVY_SPARK_LOG_DIR="/tmp/livy-logs"
+fi
 
 resolve_config_file() {
     local config_key=$1
@@ -147,7 +153,6 @@ process_template "$HIVE_SITE_TEMPLATE" "/opt/spark/conf/hive-site.xml"
 
 sudo mkdir -p /opt/livy/conf
 sudo chown -R vscode:vscode /opt/livy/conf
-export LIVY_SPARK_LOG_DIR="${GIT_ROOT}/logs/livy"
 mkdir -p "$LIVY_SPARK_LOG_DIR"
 
 process_template "$LIVY_CONF_TEMPLATE" "/opt/livy/conf/livy.conf"
