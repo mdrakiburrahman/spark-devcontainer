@@ -43,7 +43,7 @@ describe('Devcontainer Integration Tests', () => {
 
   test('Verify base image tools', () => {
     const output = execSync(
-      'docker exec spark-devcontainer-test bash -c "hatch --version && spark-submit --version"',
+      'docker exec spark-devcontainer-test bash -c "hatch --version && /opt/spark/bin/spark-submit --version"',
       { encoding: 'utf8' }
     );
     writeFileSync(join(logDir, 'base-tools.log'), output);

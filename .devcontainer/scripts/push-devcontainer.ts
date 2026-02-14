@@ -24,8 +24,8 @@ updateDevcontainerConfigFile(fullImageName, imageTag, opts.file);
 console.log(`Updating pipeline config file: ${opts.pipeline}`);
 updatePipelineConfigFile(fullImageName, imageTag, opts.pipeline);
 
-console.log(`Updating docker-compose test file`);
-updateDockerComposeTestFile(fullImageName, imageTag);
+// console.log(`Updating docker-compose test file`);
+// updateDockerComposeTestFile(fullImageName, imageTag);
 
 if (checkIfImageExists(fullImageName, imageTag)) {
     console.log(`Image ${fullImageName}:${imageTag} already exists in ACR. Skipping push...`);
