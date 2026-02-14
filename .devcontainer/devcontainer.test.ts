@@ -12,13 +12,9 @@ describe('Devcontainer Integration Tests', () => {
 
   if (!devcontainerImage) throw new Error('Could not read image from devcontainer.json');
 
-  beforeAll(() => mkdirSync(logDir, { recursive: true }));
-
-  afterAll(() => {
-    if (containerId) execSync(`docker rm -f spark-devcontainer-test`, { stdio: 'pipe' });
-  });
-
-  test('Start and verify container', () => {
+  beforeAll(() => {
+    mkdirSync(logDir, { recursive: true });
+    
     const cmd = [
       'docker run -d --name spark-devcontainer-test --cap-add=SYS_ADMIN',
       '--device=/dev/fuse --security-opt=apparmor:unconfined',
@@ -36,7 +32,15 @@ describe('Devcontainer Integration Tests', () => {
       if (status === 'running') break;
       execSync('sleep 1');
     }
-    
+  });
+
+  afterAll(() => {
+    if (containerId) execSync(`docker rm -f spark-devcontainer-test`, { stdio: 'pipe' });
+  });
+
+  test('Verify container is running', () => {
+    const status = execSync('docker inspect spark-devcontainer-test --format="{{.State.Status}}"', { encoding: 'utf8' }).trim();
+    expect(status).toBe('running');
     expect(containerId).toBeTruthy();
   });
 
