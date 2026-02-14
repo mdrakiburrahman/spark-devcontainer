@@ -24,9 +24,6 @@ updateDevcontainerConfigFile(fullImageName, imageTag, opts.file);
 console.log(`Updating pipeline config file: ${opts.pipeline}`);
 updatePipelineConfigFile(fullImageName, imageTag, opts.pipeline);
 
-// console.log(`Updating docker-compose test file`);
-// updateDockerComposeTestFile(fullImageName, imageTag);
-
 if (checkIfImageExists(fullImageName, imageTag)) {
     console.log(`Image ${fullImageName}:${imageTag} already exists in ACR. Skipping push...`);
     process.exit(0);
@@ -128,7 +125,6 @@ function updateDockerComposeTestFile(imageName: string, imageTag: string) {
     const composeFile = '.devcontainer/docker-compose.test.yml';
     let content = readFileSync(composeFile, 'utf8');
     
-    // Replace the image line in the docker-compose file
     content = content.replace(
         /image: \${DEVCONTAINER_IMAGE}/,
         `image: ${imageName}:${imageTag}`
