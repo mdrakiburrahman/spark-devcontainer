@@ -46,8 +46,8 @@ describe('Devcontainer Integration Tests', () => {
 
   test('Verify base image tools', () => {
     const output = execSync(
-      'docker exec spark-devcontainer-test bash -c "hatch --version && /opt/spark/bin/spark-submit --version"',
-      { encoding: 'utf8' }
+      'docker exec spark-devcontainer-test bash -c "hatch --version && /opt/spark/bin/spark-submit --version 2>&1"',
+      { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }
     );
     writeFileSync(join(logDir, 'base-tools.log'), output);
     expect(output).toContain('Hatch');
@@ -57,7 +57,7 @@ describe('Devcontainer Integration Tests', () => {
   test('Spark Shell SELECT 1', () => {
     const output = execSync(
       'docker exec spark-devcontainer-test bash -c \'echo "spark.sql(\\"SELECT 1\\").show()" | /opt/spark/bin/spark-shell --master local[1] 2>&1\'',
-      { encoding: 'utf8' }
+      { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }
     );
     writeFileSync(join(logDir, 'spark-shell.log'), output);
     expect(output).toContain('|  1|');
@@ -65,8 +65,8 @@ describe('Devcontainer Integration Tests', () => {
 
   test('Run post-create commands', () => {
     const output = execSync(
-      'docker exec spark-devcontainer-test bash -c "/tmp/overlay/post-create-commands.sh"',
-      { encoding: 'utf8' }
+      'docker exec spark-devcontainer-test bash -c "/tmp/overlay/post-create-commands.sh 2>&1"',
+      { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }
     );
     writeFileSync(join(logDir, 'post-create.log'), output);
     expect(output).toContain('Hatch');
@@ -74,8 +74,8 @@ describe('Devcontainer Integration Tests', () => {
 
   test('Run post-attach commands', () => {
     const output = execSync(
-      'docker exec spark-devcontainer-test bash -c "/tmp/overlay/post-attach-commands.sh"',
-      { encoding: 'utf8', timeout: 60000 }
+      'docker exec spark-devcontainer-test bash -c "/tmp/overlay/post-attach-commands.sh 2>&1"',
+      { encoding: 'utf8', timeout: 60000, stdio: ['pipe', 'pipe', 'pipe'] }
     );
     writeFileSync(join(logDir, 'post-attach.log'), output);
     expect(output).toContain('SPARK DEVCONTAINER READY');
@@ -88,7 +88,7 @@ describe('Devcontainer Integration Tests', () => {
       try {
         const output = execSync(
           'docker exec spark-devcontainer-test curl -s http://localhost:8998/sessions',
-          { encoding: 'utf8' }
+          { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }
         );
         if (output.includes('sessions')) {
           writeFileSync(join(logDir, 'livy-health.log'), output);
@@ -96,15 +96,15 @@ describe('Devcontainer Integration Tests', () => {
           break;
         }
       } catch (e) { }
-      execSync('sleep 1');
+      execSync('sleep 1', { stdio: 'pipe' });
     }
     expect(healthy).toBe(true);
   });
 
   test('Verify Livy logs exist', () => {
     const output = execSync(
-      'docker exec spark-devcontainer-test bash -c "ls -la /tmp/livy-logs/ && cat /tmp/livy-logs/livy-server.log"',
-      { encoding: 'utf8' }
+      'docker exec spark-devcontainer-test bash -c "ls -la /tmp/livy-logs/ && cat /tmp/livy-logs/livy-server.log 2>&1"',
+      { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }
     );
     writeFileSync(join(logDir, 'livy-logs.log'), output);
     expect(output).toContain('livy-server.log');

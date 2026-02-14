@@ -1,3 +1,3 @@
 variables:
   devcontainerImageName: rakirahman.azurecr.io/devcontainer/spark
-  devcontainerImageTag: a1da457358147e61d7d2da69ffa235ece3d32ebdb18d0ab4e64ea9c6a68f6f7b
+  devcontainerImageTag: 898e5a03283267a0c5d470c599bd01676ef19d9c4b418146d26a517b84438d33

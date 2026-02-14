@@ -4,7 +4,12 @@ export default {
   roots: ['<rootDir>/.devcontainer'],
   testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
+    '^.+\\.ts$': ['ts-jest', {
+      tsconfig: {
+        esModuleInterop: true,
+        isolatedModules: true,
+      },
+    }],
   },
   moduleFileExtensions: ['ts', 'js', 'json'],
   collectCoverageFrom: [
