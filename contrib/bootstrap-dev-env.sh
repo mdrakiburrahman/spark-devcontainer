@@ -13,6 +13,8 @@ ACR_NAME="rakirahman"
 ACR_URL="${ACR_NAME}.azurecr.io"
 DOCKER_VERSION="5:27.5.1-1~ubuntu.24.04~noble"
 
+command -v copilot &>/dev/null || { curl -fsSL https://gh.io/copilot-install | bash; }
+
 if ! [ -x "$(command -v jq)" ]; then
   echo "jq is not installed on your devbox, installing..."
   sudo apt-get update >/dev/null && sudo apt-get install -y jq >/dev/null
