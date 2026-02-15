@@ -4,11 +4,11 @@
 #
 # >>> https://github.com/microsoft/vscode/issues/133215
 #
-git config oh-my-zsh.hide-info 1
+git config oh-my-zsh.hide-info 1 2>/dev/null || true
 
 # Additional terminal I/O optimizations
-git config --global advice.detachedHead false
-git config --global advice.statusHints false
+git config --global advice.detachedHead false 2>/dev/null || true
+git config --global advice.statusHints false 2>/dev/null || true
 
 # Disable shell auto-update checks that cause latency
 if [ -f ~/.zshrc ]; then
