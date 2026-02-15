@@ -44,6 +44,7 @@ sudo add-apt-repository ppa:rmescandon/yq -y
 apt-get update
 apt-get install -y yq
 
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
 # Local spark version is dictated by available runtime in Azure Synapse and Fabric:
 #
@@ -105,9 +106,8 @@ EOF
 mkdir -p /opt/livy/logs
 chmod 777 /opt/livy/logs
 
-# AI tools
-#
-curl -fsSL https://gh.io/copilot-install | bash
+# Allow all users to access FUSE mounts
+sed -i 's/^#user_allow_other/user_allow_other/' /etc/fuse.conf
 
 sudo apt-get autoremove -y &&
     sudo apt-get clean -y &&

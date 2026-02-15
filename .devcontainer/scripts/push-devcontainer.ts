@@ -91,7 +91,10 @@ function updateDevcontainerConfigFile(imageName: string, imageTag: string, filen
             "--security-opt=apparmor:unconfined",
             "--add-host=host.docker.internal:host-gateway"
             ],
-        "mounts": ["type=bind,source=/dev/fuse,target=/dev/fuse"]
+        "mounts": [
+            "type=bind,source=/dev/fuse,target=/dev/fuse",
+            "type=bind,source=${localEnv:HOME}/.azure,target=/home/vscode/.azure"
+        ]
     }
 
     writeFileSync(filename, JSON.stringify(data, null, 4));
