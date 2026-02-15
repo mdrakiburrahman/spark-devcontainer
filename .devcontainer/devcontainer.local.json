@@ -8,13 +8,6 @@
     "--add-host=host.docker.internal:host-gateway",
     "--pids-limit=-1"
   ],
-  "mounts": [
-    "type=volume,source=vscode-server,target=/home/vscode/.vscode-server",
-    "type=volume,source=npm-cache,target=/home/vscode/.npm",
-    "type=volume,source=pip-cache,target=/home/vscode/.cache/pip",
-    "type=volume,source=m2-cache,target=/home/vscode/.m2",
-    "type=volume,source=sdkman-cache,target=/home/vscode/.sdkman"
-  ],
   // Features to add into the container following the new proposed specification
   // https://github.com/devcontainers/features
   "features": {
