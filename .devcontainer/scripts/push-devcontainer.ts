@@ -89,12 +89,23 @@ function updateDevcontainerConfigFile(imageName: string, imageTag: string, filen
             "--cap-add=SYS_ADMIN",
             "--device=/dev/fuse",
             "--security-opt=apparmor:unconfined",
-            "--add-host=host.docker.internal:host-gateway"
+            "--add-host=host.docker.internal:host-gateway",
+            "--pids-limit=-1"
             ],
         "mounts": [
             "type=bind,source=/dev/fuse,target=/dev/fuse",
             "type=bind,source=${localEnv:HOME}/.azure,target=/home/vscode/.azure"
-        ]
+        ],
+        "customizations": {
+            "vscode": {
+                "settings": {
+                    "terminal.integrated.gpuAcceleration": "off",
+                    "terminal.integrated.enablePersistentSessions": false,
+                    "terminal.integrated.scrollback": 5000,
+                    "remote.autoForwardPorts": false
+                }
+            }
+        }
     }
 
     writeFileSync(filename, JSON.stringify(data, null, 4));

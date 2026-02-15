@@ -5,7 +5,8 @@
   },
   "runArgs": [
     // Access docker from host machine inside the container
-    "--add-host=host.docker.internal:host-gateway"
+    "--add-host=host.docker.internal:host-gateway",
+    "--pids-limit=-1"
   ],
   // Features to add into the container following the new proposed specification
   // https://github.com/devcontainers/features
@@ -14,8 +15,8 @@
       "username": "automatic",
       "uid": "automatic",
       "gid": "automatic",
-      "installZsh": true,
-      "installOhMyZsh": true,
+      "installZsh": false,
+      "installOhMyZsh": false,
       "upgradePackages": true,
       "nonFreePackages": false
     },
@@ -80,24 +81,14 @@
         "terminal.integrated.profiles.linux": {
           "bash": {
             "path": "bash"
-          },
-          "zsh": {
-            "path": "zsh"
-          },
-          "fish": {
-            "path": "fish"
-          },
-          "tmux": {
-            "path": "tmux",
-            "icon": "terminal-tmux"
-          },
-          "pwsh": {
-            "path": "pwsh",
-            "icon": "terminal-powershell"
           }
         },
         "terminal.integrated.defaultProfile.linux": "bash",
         "terminal.integrated.inheritEnv": true,
+        "terminal.integrated.gpuAcceleration": "off",
+        "terminal.integrated.enablePersistentSessions": false,
+        "terminal.integrated.scrollback": 5000,
+        "remote.autoForwardPorts": false,
         // VS Code team has a regression that regresses extensions in devcontainer, this is a workaround
         // until they fix this bug: https://github.com/microsoft/vscode/issues/175705#issuecomment-1987083692
         //
@@ -118,16 +109,11 @@
       },
       // Add the IDs of extensions you want installed when the container is created.
       "extensions": [
-        "donjayamanne.githistory", // Enhanced git history experience
         "dbdiagram.dbdiagram-vscode", // Database diagram designer
-        "eamodio.gitlens", // Enhanced git experience
-        "EditorConfig.EditorConfig", // Support for .editorconfig files
         "esbenp.prettier-vscode", // A pretty good formatter for many languages
-        "foxundermoon.shell-format", // Shell script formatter
         "github.copilot-chat", // Copilot chat integration
         "github.copilot", // Copilot integration
         "Gruntfuggly.todo-tree", // Highlights TODO comments in code
-        "huntertran.auto-markdown-toc", // Auto-generated Markdown Table of Contents
         "ms-azuretools.vscode-docker", // Docker integration
         "nrwl.angular-console", // Nx console plugin
         "oderwat.indent-rainbow", // Color indented code to make it easier to read
@@ -135,7 +121,6 @@
         "stkb.rewrap", // "Alt + Q" -> rewrap comments after n characters on one line
         "streetsidesoftware.code-spell-checker", // Spell checks your code
         "tyriar.sort-lines", // "Ctrl + Shift + P -> Sort lines" -> sort lines alphabetically
-        "waderyan.gitblame", // Enhances git blame experience
         "scalameta.metals@1.42.0", // Scala language server and IDE
         "scala-lang.scala@0.5.8", // Scala language support
         "vscjava.vscode-java-pack@0.29.0", // Java Extension Pack
