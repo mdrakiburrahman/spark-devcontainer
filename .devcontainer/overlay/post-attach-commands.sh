@@ -13,8 +13,8 @@ git config --global advice.statusHints false
 # Disable shell auto-update checks that cause latency
 if [ -f ~/.zshrc ]; then
     # Disable oh-my-zsh automatic updates
-    grep -q "DISABLE_AUTO_UPDATE" ~/.zshrc || echo "DISABLE_AUTO_UPDATE=true" >> ~/.zshrc
-    grep -q "DISABLE_UPDATE_PROMPT" ~/.zshrc || echo "DISABLE_UPDATE_PROMPT=true" >> ~/.zshrc
+    grep -q "DISABLE_AUTO_UPDATE" ~/.zshrc || echo "DISABLE_AUTO_UPDATE=true" >> ~/.zshrc || true
+    grep -q "DISABLE_UPDATE_PROMPT" ~/.zshrc || echo "DISABLE_UPDATE_PROMPT=true" >> ~/.zshrc || true
 fi
 
 export SPARK_HOME=/opt/spark
