@@ -1,22 +1,5 @@
 #!/bin/bash -e
 
-# This significantly speeds up terminal I/O
-#
-# >>> https://github.com/microsoft/vscode/issues/133215
-#
-git config oh-my-zsh.hide-info 1 2>/dev/null || true
-
-# Additional terminal I/O optimizations
-git config --global advice.detachedHead false 2>/dev/null || true
-git config --global advice.statusHints false 2>/dev/null || true
-
-# Disable shell auto-update checks that cause latency
-if [ -f ~/.zshrc ]; then
-    # Disable oh-my-zsh automatic updates
-    grep -q "DISABLE_AUTO_UPDATE" ~/.zshrc || echo "DISABLE_AUTO_UPDATE=true" >> ~/.zshrc || true
-    grep -q "DISABLE_UPDATE_PROMPT" ~/.zshrc || echo "DISABLE_UPDATE_PROMPT=true" >> ~/.zshrc || true
-fi
-
 export SPARK_HOME=/opt/spark
 export LIVY_HOME=/opt/livy
 export SCRIPT_DIR=$(realpath $(dirname $0))
@@ -25,6 +8,21 @@ source "${SCRIPT_DIR}/common.sh"
 GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo "$(pwd)")
 [ ! -d "$GIT_ROOT/.git" ] && echo "WARNING: Not inside a git repository. Using built-in defaults only."
 export GIT_ROOT
+
+# Terminal I/O optimizations - only run if in a git repository
+if [ -d "$GIT_ROOT/.git" ]; then
+    # This significantly speeds up terminal I/O
+    # >>> https://github.com/microsoft/vscode/issues/133215
+    git config oh-my-zsh.hide-info 1 2>/dev/null || true
+    git config --global advice.detachedHead false 2>/dev/null || true
+    git config --global advice.statusHints false 2>/dev/null || true
+    
+    # Disable shell auto-update checks that cause latency
+    if [ -f ~/.zshrc ]; then
+        grep -q "DISABLE_AUTO_UPDATE" ~/.zshrc || echo "DISABLE_AUTO_UPDATE=true" >> ~/.zshrc || true
+        grep -q "DISABLE_UPDATE_PROMPT" ~/.zshrc || echo "DISABLE_UPDATE_PROMPT=true" >> ~/.zshrc || true
+    fi
+fi
 
 PROCESSED_FILES=()
 CONFIG_SOURCES=()
