@@ -94,10 +94,7 @@ function updateDevcontainerConfigFile(imageName: string, imageTag: string, filen
             ],
         "mounts": [
             "type=bind,source=/dev/fuse,target=/dev/fuse",
-            "type=bind,source=${localEnv:HOME}/.azure,target=/home/vscode/.azure",
-            "type=volume,source=vscode-server,target=/home/vscode/.vscode-server",
-            "type=volume,source=npm-cache,target=/home/vscode/.npm",
-            "type=volume,source=pip-cache,target=/home/vscode/.cache/pip"
+            "type=bind,source=${localEnv:HOME}/.azure,target=/home/vscode/.azure"
         ],
         "customizations": {
             "vscode": {
