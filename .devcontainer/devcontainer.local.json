@@ -5,7 +5,15 @@
   },
   "runArgs": [
     // Access docker from host machine inside the container
-    "--add-host=host.docker.internal:host-gateway"
+    "--add-host=host.docker.internal:host-gateway",
+    "--pids-limit=-1"
+  ],
+  "mounts": [
+    "type=volume,source=vscode-server,target=/home/vscode/.vscode-server",
+    "type=volume,source=npm-cache,target=/home/vscode/.npm",
+    "type=volume,source=pip-cache,target=/home/vscode/.cache/pip",
+    "type=volume,source=m2-cache,target=/home/vscode/.m2",
+    "type=volume,source=sdkman-cache,target=/home/vscode/.sdkman"
   ],
   // Features to add into the container following the new proposed specification
   // https://github.com/devcontainers/features
@@ -98,6 +106,10 @@
         },
         "terminal.integrated.defaultProfile.linux": "bash",
         "terminal.integrated.inheritEnv": true,
+        "terminal.integrated.gpuAcceleration": "off",
+        "terminal.integrated.enablePersistentSessions": false,
+        "terminal.integrated.scrollback": 5000,
+        "remote.autoForwardPorts": false,
         // VS Code team has a regression that regresses extensions in devcontainer, this is a workaround
         // until they fix this bug: https://github.com/microsoft/vscode/issues/175705#issuecomment-1987083692
         //
