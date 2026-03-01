@@ -109,6 +109,11 @@ chmod 777 /opt/livy/logs
 # Allow all users to access FUSE mounts
 sed -i 's/^#user_allow_other/user_allow_other/' /etc/fuse.conf
 
+FABRIC_ODBC_URL="https://rakirahman.blob.core.windows.net/public/binaries/microsoft-fabric-odbc-driver-1.0.0-Linux.deb"
+curl -sSL -o /tmp/microsoft-fabric-odbc-driver.deb "${FABRIC_ODBC_URL}"
+dpkg -i /tmp/microsoft-fabric-odbc-driver.deb
+rm -f /tmp/microsoft-fabric-odbc-driver.deb
+
 sudo apt-get autoremove -y &&
     sudo apt-get clean -y &&
     sudo rm -rf /var/lib/apt/lists/* &&
