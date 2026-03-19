@@ -26,9 +26,9 @@ if ($pkg) {
 }
 Remove-Item -Path "$env:PROGRAMFILES\Docker", "$env:PROGRAMDATA\Docker*", "$env:LOCALAPPDATA\Docker*", "$env:APPDATA\Docker*" -Recurse -Force -ErrorAction SilentlyContinue
 
-if (wsl -l -q | Select-String -SimpleMatch "Ubuntu-24.04") {
-    Write-Host "Unregistering Ubuntu-24.04"
-    wsl --unregister Ubuntu-24.04
+if (wsl -l -q | Select-String -SimpleMatch "Ubuntu") {
+    Write-Host "Unregistering Ubuntu"
+    wsl --unregister Ubuntu
 }
 
 $memGB=[math]::Floor((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory/1GB)
@@ -47,5 +47,5 @@ wsl --shutdown
 
 winget install -e --id Microsoft.GitCredentialManagerCore
 
-Write-Host "Installing Ubuntu-24.04"
-wsl --install -d Ubuntu-24.04
+Write-Host "Installing Ubuntu"
+wsl --install -d Ubuntu
