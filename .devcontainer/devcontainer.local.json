@@ -126,7 +126,8 @@
         "vscjava.vscode-java-pack@0.29.0", // Java Extension Pack
         "ms-python.python", // Python extension for Visual Studio Code
         "ms-python.vscode-pylance", // Fast, feature-rich language support for Python
-        "ms-python.autopep8" // pep8 support
+        "ms-python.autopep8", // pep8 support
+        "synapsevscode.synapse" // Fabric Spark Data Engineering for local Notebooks against Fabric Spark
       ]
     }
   }
